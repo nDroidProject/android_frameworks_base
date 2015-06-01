@@ -37,7 +37,7 @@ LOCAL_STATIC_LIBRARIES := \
 LOCAL_LDLIBS := -lz
 
 ifeq ($(HOST_OS),linux)
-LOCAL_LDLIBS += -lrt
+LOCAL_LDLIBS += -lrt -lpthread
 endif
 
 ifeq ($(HOST_OS),windows)
