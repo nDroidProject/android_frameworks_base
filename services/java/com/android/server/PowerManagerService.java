@@ -350,7 +350,7 @@ class PowerManagerService extends IPowerManager.Stub implements LocalPowerManage
         Power.setLastUserActivityTimeout(7*24*3600*1000); // one week
 
         // assume nothing is on yet
-        mUserState = mPowerState = 0;
+        mUserState = mPowerState = SCREEN_BRIGHT;
         
         // Add ourself to the Watchdog monitors.
         Watchdog.getInstance().addMonitor(this);
