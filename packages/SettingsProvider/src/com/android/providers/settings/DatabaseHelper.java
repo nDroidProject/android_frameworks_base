@@ -119,6 +119,8 @@ class DatabaseHelper extends SQLiteOpenHelper {
 
         db.execSQL("CREATE INDEX bookmarksIndex1 ON bookmarks (folder);");
         db.execSQL("CREATE INDEX bookmarksIndex2 ON bookmarks (shortcut);");
+        // "Provision" the device
+        db.execSQL("INSERT INTO secure (name, value) VALUES ('device_provisioned', '1');");
 
         // Populate bookmarks table with initial bookmarks
         loadBookmarks(db);
