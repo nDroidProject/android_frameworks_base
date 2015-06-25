@@ -86,7 +86,6 @@ class BatteryService extends Binder {
     private static final int DUMP_MAX_LENGTH = 24 * 1024;
     private static final String[] DUMPSYS_ARGS = new String[] { "--checkin", "-u" };
     private static final String BATTERY_STATS_SERVICE_NAME = "batteryinfo";
-    private static final String BATTERY_TECHNOLOGY = "dynamo";
     
     private static final String DUMPSYS_DATA_PATH = "/data/system/";
 
@@ -126,7 +125,7 @@ class BatteryService extends Binder {
         mContext = context;
         mBatteryStats = BatteryStatsService.getService();
 
-        // mUEventObserver.startObserving("SUBSYSTEM=power_supply");
+        mUEventObserver.startObserving("SUBSYSTEM=power_supply");
 
         // set initial status
         update();
@@ -177,25 +176,9 @@ class BatteryService extends Binder {
     private synchronized final void update() {
         native_update();
 
-        mBatteryLevel = BATTERY_SCALE - CRITICAL_BATTERY_LEVEL;
-        mBatteryLevelCritical = mBatteryLevel <= CRITICAL_BATTERY_LEVEL;
-        mPlugType = BatteryManager.BATTERY_PLUGGED_AC;
-        mDischargeStartTime = 0;
-
-        mBatteryStatus = BatteryManager.BATTERY_STATUS_FULL;
-        mBatteryHealth = BatteryManager.BATTERY_HEALTH_GOOD;
-        mBatteryPresent = true;
-        mBatteryVoltage = 5;
-        mBatteryTemperature = 30;
-        mBatteryTechnology = BATTERY_TECHNOLOGY;
-        sendIntent();
-
-        return;
-
-        /*
         boolean logOutlier = false;
         long dischargeDuration = 0;
-
+        
         mBatteryLevelCritical = mBatteryLevel <= CRITICAL_BATTERY_LEVEL;
         if (mAcOnline) {
             mPlugType = BatteryManager.BATTERY_PLUGGED_AC;
@@ -294,7 +277,6 @@ class BatteryService extends Binder {
                 logOutlier(dischargeDuration);
             }
         }
-        */
     }
 
     private final void sendIntent() {

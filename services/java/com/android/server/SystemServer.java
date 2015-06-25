@@ -346,57 +346,32 @@ class ServerThread extends Thread {
                 false, new AdbSettingsObserver());
 
         // It is now time to start up the app processes...
-        boolean safeMode = false;
-        try {
-                safeMode = wm.detectSafeMode();
-        } catch (Exception e) {
-                Log.e(TAG, "Failure detectSafeMode()", e);
+        boolean safeMode = wm.detectSafeMode();
+
+        if (notification != null) {
+            notification.systemReady();
         }
 
         if (statusBar != null) {
-                try {
-                        statusBar.systemReady();
-                } catch (Exception e) {
-                        Log.e(TAG, "Failure statusBar.systemReady()", e);
-                }
+            statusBar.systemReady();
         }
-
         if (imm != null) {
-                imm.systemReady();
+            imm.systemReady();
         }
-
+        wm.systemReady();
+        power.systemReady();
         try {
-                wm.systemReady();
-        } catch (Exception e) {
-                Log.e(TAG, "Failure wm.systemReady()", e);
-        }
-
-        try {
-                power.systemReady();
-        } catch (Exception e) {
-                Log.e(TAG, "Failure power.systemReady()", e);
-        }
-
-        try {
-                pm.systemReady();
+            pm.systemReady();
         } catch (RemoteException e) {
-                e.printStackTrace();
         }
-
         if (appWidget != null) {
-                try {
-                        appWidget.systemReady(safeMode);
-                } catch (Exception e) {
-                        Log.e(TAG, "Failure appWidget.systemReady()", e);
-                }
-
+            appWidget.systemReady(safeMode);
         }
 
         // After making the following code, third party code may be running...
         try {
-                ActivityManagerNative.getDefault().systemReady();
-        } catch (Exception e) {
-                Log.e(TAG, "Failure ActivityManagerNative.getDefault().systemReady()", e);
+            ActivityManagerNative.getDefault().systemReady();
+        } catch (RemoteException e) {
         }
 
         Watchdog.getInstance().start();
